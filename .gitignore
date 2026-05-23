@@ -1,0 +1,80 @@
+# ── Environment & Secrets ─────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Python ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+.installed.cfg
+*.manifest
+
+# ── Virtual Environments ──────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── YOLO / Ultralytics ────────────────────────────────────────────────
+# Ignore all model weights by default...
+models/*.pt
+models/*.onnx
+models/*.engine
+models/*.torchscript
+# ...except the fine-tuned production weights
+!models/aerial_weeds.pt
+
+# Training runs output
+runs/
+
+# ── Reports / Database ────────────────────────────────────────────────
+# Ignore all reports by default...
+reports/*.jsonl
+reports/*.json
+# ...except the master report database
+!reports/argo_report.jsonl
+
+# ── Datasets ──────────────────────────────────────────────────────────
+datasets/
+
+# ── Drone Images ──────────────────────────────────────────────────────
+*.jpg
+*.jpeg
+*.png
+*.tiff
+*.tif
+*.dng
+*.JPG
+*.JPEG
+*.PNG
+
+# ── GCP / Google Cloud ────────────────────────────────────────────────
+application_default_credentials.json
+gcp-key*.json
+service-account*.json
+*.serviceaccount.json
+
+# ── Streamlit ─────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── IDEs & Editors ────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
