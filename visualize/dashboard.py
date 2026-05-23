@@ -12,6 +12,22 @@ load_dotenv()
 
 # ─── PAGE CONFIG ────────────────────────────────────────────────────────
 st.set_page_config(page_title="Agronomy Intelligence", page_icon="🚁", layout="wide")
+
+# ⬇️ ADD THIS CSS INJECTION BLOCK ⬇️
+hide_decoration_bar_style = """
+    <style>
+        /* Makes the top Streamlit header scroll away instead of staying fixed */
+        header { position: absolute !important; }
+        
+        /* Optional: If you want to completely hide the top menu/deploy button forever, uncomment the line below */
+        /* header { display: none !important; } */
+        
+        /* Optional: Hides the default Streamlit watermark at the bottom */
+        footer { visibility: hidden !important; }
+    </style>
+"""
+st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
+
 st.title("🚁 Precision Farming Dashboard")
 st.markdown("Analyze drone imagery reports, crop stress, and agent verifications.")
 
@@ -38,8 +54,12 @@ def load_data():
             data = json.loads(line)
             
             # 1. Figure out the primary status
-            issues = data.get("final_assessment", {}).get("detected_issues", [])
-            primary = issues[0] if issues else "Healthy" # Or "Healthy" if you kept it
+            # issues = data.get("final_assessment", {}).get("detected_issues", [])
+            # primary = issues[0] if issues else "Healthy" # Or "Healthy" if you kept it
+
+            # error check
+            detection_summary = data.get("detection_summary", {})
+            primary = "weed" if detection_summary.get("weed", 0) > 0 else "Healthy"
             
             # 2. DEFINING THE GRADES (This is what was missing!)
             raw_grade = data.get("field_health_grade", "N/A")
@@ -121,7 +141,7 @@ with map_col:
         center_lon = filtered_df['lon'].mean()
     else:
         center_lat, center_lon = 41.8781, -87.6298 
-
+    
     show_heatmap = st.toggle(" Show Infestation Heatmap", value=False)
 
     if show_heatmap:

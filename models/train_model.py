@@ -11,7 +11,7 @@ def train_and_deploy():
     # 2. Train the model using your exact Mac-optimized settings
     results = model.train(
         data="datasets/weed_crop_aerial/data.yaml",
-        epochs=20,
+        epochs=25,
         imgsz=640,
         device="mps",
         batch=16,
