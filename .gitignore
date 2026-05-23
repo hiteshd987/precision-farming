@@ -48,8 +48,10 @@ reports/*.json
 !reports/argo_report.jsonl
 
 # ── Datasets ──────────────────────────────────────────────────────────
-!datasets/get_drone_images.py
-datasets/
+# ── Datasets ──────────────────────────────────────────────────────────
+!datasets/
+datasets/drone_images/
+datasets/weed_crop_aerial
 
 # ── Drone Images ──────────────────────────────────────────────────────
 *.jpg
