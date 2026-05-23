@@ -63,6 +63,8 @@ datasets/weed_crop_aerial
 *.JPEG
 *.PNG
 
+!assets/*.png        
+
 # ── GCP / Google Cloud ────────────────────────────────────────────────
 application_default_credentials.json
 gcp-key*.json
