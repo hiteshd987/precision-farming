@@ -31,7 +31,7 @@ def train_and_deploy():
     # 5. Automatically copy and rename the file!
     shutil.copy(best_model_path, destination)
     
-    print(f"\n✅ TRAINING COMPLETE!")
+    print(f"\n TRAINING COMPLETE!")
     print(f" New AI brain automatically installed at: {destination}")
 
 if __name__ == "__main__":

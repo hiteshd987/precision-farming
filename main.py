@@ -13,8 +13,11 @@ from agents.report_agent import ReportAgent
 
 load_dotenv()
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # ── Point directly at your DJI images folder ──────────────────────────────────
-DRONE_IMAGES_DIR = Path("/Users/hitesh/Documents/try_precision/datasets/drone_images")
+# DRONE_IMAGES_DIR = Path("/Users/hitesh/Documents/precision-farming/datasets/drone_images")
+DRONE_IMAGES_DIR = BASE_DIR / "datasets" / "drone_images"
 SUPPORTED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tiff", ".tif", ".dng", ".JPG", ".JPEG", ".PNG"}
 
 def run_pipeline(image_path: Path, model_name: str):
@@ -28,9 +31,9 @@ def run_pipeline(image_path: Path, model_name: str):
     yolo_data = extractor.extract(str(image_path))
     
     # Exposing the variables:
-    print(f"   ↳ 📸 Detections: {yolo_data['detection_summary']}")
-    print(f"   ↳ 🌍 GPS Found: lat {yolo_data['gps']['lat']}, lon {yolo_data['gps']['lon']}")
-    print(f"   ↳ ⏰ Timestamp: {yolo_data['timestamp']}\n")
+    print(f"   ↳  Detections: {yolo_data['detection_summary']}")
+    print(f"   ↳  GPS Found: lat {yolo_data['gps']['lat']}, lon {yolo_data['gps']['lon']}")
+    print(f"   ↳  Timestamp: {yolo_data['timestamp']}\n")
 
     # ── STEP 2: Weather ─────────────────────────────────────────────
     print("📍 STEP 2: Fetching Historical Weather Data...")
@@ -51,7 +54,7 @@ def run_pipeline(image_path: Path, model_name: str):
     analysis = agronomy_agent.analyze(yolo_data, weather)
     
     # Exposing the variables:
-    status = "⚠️ Failed JSON Parse" if analysis.get("parse_error") else "✅ Success"
+    status = " Failed JSON Parse" if analysis.get("parse_error") else "✅ Success"
     print(f"   ↳  Generation Status: {status}")
     print(f"   ↳ AI Confidence Score: {analysis.get('Confidence Score', 'N/A')}\n")
 
@@ -66,7 +69,7 @@ def run_pipeline(image_path: Path, model_name: str):
     
     corrections = final_report.get("corrections", [])
     if corrections:
-        print(f"   ↳ ⚠️ Boss Corrections Made: {len(corrections)}")
+        print(f"   ↳  Boss Corrections Made: {len(corrections)}")
         for i, correction in enumerate(corrections, 1):
             print(f"        {i}. {correction}")
     print("\n")
@@ -81,8 +84,7 @@ def run_pipeline(image_path: Path, model_name: str):
     final_report["detection_summary"] = yolo_data["detection_summary"]
     final_report["weather"] = weather
 
-    # If you still have the report_agent.save() line, you can leave it, 
-    # but the critical part is returning the fully bundled final_report
+    #   critical part is returning the fully bundled final_report
     return final_report
 
 if __name__ == "__main__":
@@ -106,7 +108,7 @@ if __name__ == "__main__":
             images = images[:limit]
             
         if not images:
-            print(f"⚠️  No images found in {DRONE_IMAGES_DIR}")
+            print(f"  No images found in {DRONE_IMAGES_DIR}")
         else:
             success, failed = 0, []
             
@@ -130,6 +132,6 @@ if __name__ == "__main__":
                     failed.append(img.name)
 
             print(f"\n{'─'*50}")
-            print(f"📊 Pipeline Summary")
-            print(f"   ✅ Processed: {success}/{len(images)}")
-            print(f"   📁 MASTER REPORT APPENDED TO: {out_path}")
+            print(f" Pipeline Summary")
+            print(f"    Processed: {success}/{len(images)}")
+            print(f"    MASTER REPORT APPENDED TO: {out_path}")

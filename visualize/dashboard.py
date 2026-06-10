@@ -13,7 +13,7 @@ load_dotenv()
 # ─── PAGE CONFIG ────────────────────────────────────────────────────────
 st.set_page_config(page_title="Agronomy Intelligence", page_icon="🚁", layout="wide")
 
-# ⬇️ ADD THIS CSS INJECTION BLOCK ⬇️
+# ADD THIS CSS INJECTION BLOCK ⬇️
 hide_decoration_bar_style = """
     <style>
         /* Makes the top Streamlit header scroll away instead of staying fixed */
@@ -37,7 +37,7 @@ def load_data():
     base_dir = Path(__file__).parent.parent
     filepath = base_dir / "reports" / "argo_report.jsonl"
     
-    print(f"🔍 Looking for file at: {filepath}")
+    print(f" Looking for file at: {filepath}")
     
     if not filepath.exists():
         print(" FILE NOT FOUND!")
@@ -46,7 +46,7 @@ def load_data():
     records = []
     with open(filepath, "r") as f:
         lines = f.readlines()
-        print(f"📄 Found {len(lines)} lines in the file.")
+        print(f" Found {len(lines)} lines in the file.")
         
         f.seek(0)
 
@@ -61,7 +61,7 @@ def load_data():
             detection_summary = data.get("detection_summary", {})
             primary = "weed" if detection_summary.get("weed", 0) > 0 else "Healthy"
             
-            # 2. DEFINING THE GRADES (This is what was missing!)
+            # 2. DEFINING THE GRADES
             raw_grade = data.get("field_health_grade", "N/A")
             clean_grade = raw_grade[0] if raw_grade != "N/A" else "N/A"
             
@@ -72,7 +72,7 @@ def load_data():
                 "lon": data.get("gps", {}).get("lon"),
                 "timestamp": data.get("timestamp"),
                 "status": primary, 
-                "grade": clean_grade,       # Now Python knows what this is!
+                "grade": clean_grade,      
                 "raw_grade_text": raw_grade, 
                 "verified": data.get("verified", False),
                 "weather_conditions": data.get("weather", {}).get("conditions", "N/A")
@@ -89,14 +89,14 @@ def load_data():
         df['lat'] = df['lat'].fillna(mock_lats)
         df['lon'] = df['lon'].fillna(mock_lons)
         
-        print(f"🌍 Rows remaining after mock GPS injection: {len(df)}")
+        print(f"Rows remaining after mock GPS injection: {len(df)}")
         
     return df
 
 df = load_data()
 
 if df.empty:
-    st.warning("⚠️ No valid data found in reports/argo_report.jsonl. Run your pipeline first!")
+    st.warning(" No valid data found in reports/argo_report.jsonl. Run your pipeline first!")
     st.stop()
 
 # ─── SIDEBAR FILTERS ────────────────────────────────────────────────────
@@ -123,8 +123,8 @@ good_health_count = len(filtered_df[filtered_df['grade'].isin(['A', 'B'])])
 bad_health_count = len(filtered_df[filtered_df['grade'].isin(['C', 'F'])])
 
 col1.metric("Total Surveys", len(filtered_df))
-col2.metric("✅ Acceptable Health (A/B)", good_health_count)
-col3.metric("⚠️ Action Required (C/F)", bad_health_count)
+col2.metric(" Acceptable Health (A/B)", good_health_count)
+col3.metric(" Action Required (C/F)", bad_health_count)
 col4.metric("Verified Reports", len(filtered_df[filtered_df['verified'] == True]))
 
 st.divider()
@@ -180,10 +180,10 @@ with map_col:
             center={"lat": center_lat, "lon": center_lon},
             title="Exact Field Stress Locations"
         )
-        # FIX 1: This marker update MUST stay safely tucked inside the 'else' block!
+        #  This marker update MUST stay safely tucked inside the 'else' block!
         fig_map.update_traces(marker=dict(size=14, opacity=0.85))
     
-    # FIX 2: Apply the free open-street-map style to WHICHEVER map was just built
+    #  Apply the free open-street-map style to the map that was just built
     fig_map.update_layout(
         mapbox_style="open-street-map", 
         margin={"r":0,"t":40,"l":0,"b":0}
@@ -221,7 +221,7 @@ bottom_col1, bottom_col2 = st.columns(2)
 
 # 3. Put the Time Series in the LEFT column
 with bottom_col1:
-    st.subheader("⏱️ Field Health Over Time")
+    st.subheader("⏱ Field Health Over Time")
     
     # Convert timestamp to a readable Date
     filtered_df['Date'] = pd.to_datetime(filtered_df['timestamp']).dt.date
@@ -241,7 +241,7 @@ with bottom_col1:
 
 # 4. Put the Donut Chart in the RIGHT column
 with bottom_col2:
-    st.subheader("📈 Health Grade Distribution")
+    st.subheader(" Health Grade Distribution")
     
     # Count how many of each grade exist
     grade_counts = filtered_df['grade'].value_counts().reset_index()
@@ -349,7 +349,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # 3. Create the FAQ Buttons
-st.write("💡 **Try asking:**")
+st.write(" **Try asking:**")
 colA, colB, colC = st.columns(3)
 
 # We create a master variable to hold the prompt, regardless of where it comes from
@@ -380,7 +380,7 @@ if prompt_to_process:
     # Send to Gemini
     response = st.session_state.chat_session.send_message(prompt_to_process)
     
-# THE FIX: Handle Parallel Function Calling
+# Handle Parallel Function Calling
     while response.candidates and response.candidates[0].function_calls:
         # Create an empty list to hold all our tool answers
         function_responses = []
